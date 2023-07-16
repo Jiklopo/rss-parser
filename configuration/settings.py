@@ -29,6 +29,7 @@ DJANGO_APPS = [
 
 INTERNAL_APPS = [
     'apps.authentication',
+    'apps.news',
 ]
 
 THIRD_PARTY_APPS = [
@@ -191,7 +192,7 @@ LOGGING = {
 
 # Internationalization
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
