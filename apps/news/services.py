@@ -2,9 +2,11 @@ from datetime import datetime
 from logging import getLogger
 
 import feedparser
+from bs4 import BeautifulSoup
 from django.db import transaction
 from django.utils import timezone
 
+from apps.content_filter.services import filter_content
 from apps.news.models import RssFeed, RssEntry, EntryTag
 
 logger = getLogger(__name__)
@@ -41,11 +43,24 @@ def create_rss_entry(rss_feed, entry_data):
     entry = RssEntry.objects.create(
         rss_feed=rss_feed,
         link=entry_data.link,
-        title=entry_data.title,
-        summary=entry_data.summary,
+        title=clear_html(entry_data.title),
+        summary=clear_html(entry_data.summary),
         published=published,
         external_id=entry_data.id
     )
     tags = [EntryTag.objects.get_or_create(text=t)[0] for t in tags_text]
     entry.tags.set(tags)
+
+    matched_words = filter_content(entry.filter_text)
+    if matched_words:
+        entry.matched_words = ' '.join(matched_words)
+        entry.passed_filter = True
+        entry.save()
+
     return entry
+
+
+def clear_html(text):
+    soup = BeautifulSoup(text, 'html.parser')
+    clean_text = soup.get_text()
+    return clean_text

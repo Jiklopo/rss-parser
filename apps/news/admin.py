@@ -21,10 +21,10 @@ class RssSubscriptionAdmin(admin.ModelAdmin):
 
 @admin.register(RssEntry)
 class RssEntryAdmin(admin.ModelAdmin):
-    list_display = ['rss_feed', 'title', 'published', 'tags_text', 'link_html']
-    readonly_fields = ['published', 'external_id']
+    list_display = ['rss_feed', 'title', 'published', 'passed_filter', 'link_html']
+    readonly_fields = ['published', 'external_id', 'tags_text']
 
-    list_filter = ['rss_feed', 'tags']
+    list_filter = ['rss_feed', 'passed_filter', 'tags', 'published']
     search_fields = ['title', 'summary']
 
     def get_queryset(self, request):

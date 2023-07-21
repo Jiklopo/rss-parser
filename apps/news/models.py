@@ -46,6 +46,9 @@ class RssEntry(UUIDModel, DateTimeModel):
     summary = models.TextField(_('Краткое описание'))
     published = models.DateTimeField(_('Время публикации'))
     external_id = models.CharField(_('Внешний ID'), max_length=255)
+    passed_filter = models.BooleanField(_('Прошла фильтрацию'), default=False)
+    matched_words = models.TextField(_('Текст, прошедший фильтр'), blank=True, null=True)
+
     tags = models.ManyToManyField(
         to='EntryTag',
         related_name='entries',
@@ -58,6 +61,12 @@ class RssEntry(UUIDModel, DateTimeModel):
     @admin.display(description=_('Тэги'))
     def tags_text(self):
         return ', '.join(t.text.title() for t in self.tags.all())
+
+    @property
+    @admin.display(description=_('Текст для фильтрации'))
+    def filter_text(self):
+        fields = (self.link, self.title, self.summary, self.tags_text)
+        return f'\n'.join(fields)
 
     def __str__(self):
         return self.title

@@ -29,6 +29,7 @@ DJANGO_APPS = [
 
 INTERNAL_APPS = [
     'apps.authentication',
+    'apps.content_filter',
     'apps.news',
 ]
 
@@ -203,3 +204,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+SHELL_PLUS_IMPORTS = (
+    'from apps.content_filter.services import *',
+)
