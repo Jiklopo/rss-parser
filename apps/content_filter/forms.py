@@ -20,7 +20,7 @@ class KeywordCreateForm(forms.ModelForm):
     def save(self, commit=True):
         saved_keywords = get_keywords(use_cache=False)
         delimiter = self.cleaned_data['delimiter']
-        keywords = (kword.lower().strip() for kword in self.cleaned_data['keywords'].split(delimiter))
+        keywords = set(kword.lower().strip() for kword in self.cleaned_data['keywords'].split(delimiter))
         keyword_objects = (Keyword(text=kword) for kword in keywords if kword and kword not in saved_keywords)
         Keyword.objects.bulk_create(keyword_objects)
         return Keyword.objects.first()
