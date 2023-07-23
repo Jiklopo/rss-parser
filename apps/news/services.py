@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from django.db import transaction
 from django.utils import timezone
 
+from apps.bot.services import send_message
 from apps.content_filter.services import filter_content
 from apps.news.models import RssFeed, RssEntry, EntryTag
 
@@ -50,14 +51,20 @@ def create_rss_entry(rss_feed, entry_data):
     )
     tags = [EntryTag.objects.get_or_create(text=t)[0] for t in tags_text]
     entry.tags.set(tags)
+    check_entry_content(entry)
+    return entry
 
+
+def check_entry_content(entry):
     matched_words = filter_content(entry.filter_text)
     if matched_words:
         entry.matched_words = ' '.join(matched_words)
         entry.passed_filter = True
         entry.save()
-
-    return entry
+        send_message(f'{entry.title}\n'
+                     f'{entry.published.strftime("%d-%m-%Y %H:%M:%S")}\n\n'
+                     f'{entry.summary}\n\n'
+                     f'<a href="{entry.link}">Читать</a>')
 
 
 def clear_html(text):
