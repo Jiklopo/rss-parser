@@ -62,7 +62,7 @@ def check_entry_content(entry):
         entry.passed_filter = True
         entry.save()
         send_message(f'{entry.title}\n'
-                     f'{entry.published.strftime("%d-%m-%Y %H:%M:%S")}\n\n'
+                     f'{entry.matched_words}\n\n'
                      f'{entry.summary}\n\n'
                      f'<a href="{entry.link}">Читать</a>')
 
