@@ -2,6 +2,7 @@ from datetime import datetime
 from logging import getLogger
 
 import feedparser
+import pytz
 from bs4 import BeautifulSoup
 from django.db import transaction
 from django.utils import timezone
@@ -40,7 +41,8 @@ def create_rss_entry(rss_feed, entry_data):
     except RssEntry.DoesNotExist:
         pass
 
-    published = datetime(*entry_data.published_parsed[:6])
+    # TODO: add timezone determination
+    published = datetime(*entry_data.published_parsed[:6], tzinfo=pytz.UTC)
     entry = RssEntry.objects.create(
         rss_feed=rss_feed,
         link=entry_data.link,
