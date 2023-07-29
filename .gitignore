@@ -380,3 +380,6 @@ pyrightconfig.json
 
 # PyCharm configurations
 .idea/
+
+# Telethon session file
+telethon.session

@@ -29,7 +29,7 @@ DJANGO_APPS = [
 
 INTERNAL_APPS = [
     'apps.authentication',
-    'apps.bot',
+    'apps.telegram',
     'apps.content_filter',
     'apps.news',
 ]
@@ -208,6 +208,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 BOT_TOKEN = getenv('BOT_TOKEN')
 BOT_CHAT_ID = getenv('BOT_CHAT_ID')
+TELEGRAM_API_ID = getenv('TELEGRAM_API_ID')
+TELEGRAM_API_HASH = getenv('TELEGRAM_API_HASH')
 
 SHELL_PLUS_IMPORTS = (
     'from apps.content_filter.services import *',
