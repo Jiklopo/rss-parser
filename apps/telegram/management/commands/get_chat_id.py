@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from apps.bot.bot import bot
+from apps.telegram.bot import bot
 
 
 class Command(BaseCommand):

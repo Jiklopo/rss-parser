@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from apps.bot.services import send_message
+from apps.telegram.services import send_bot_message
 
 
 class Command(BaseCommand):
@@ -13,4 +13,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         chat_id = options['chat_id']
         text = options['text']
-        send_message(text, chat_id=chat_id)
+        send_bot_message(text, chat_id=chat_id)

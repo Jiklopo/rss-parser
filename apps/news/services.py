@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from django.db import transaction
 from django.utils import timezone
 
-from apps.bot.services import send_message
+from apps.telegram.services import send_bot_message
 from apps.content_filter.services import filter_content
 from apps.news.models import RssFeed, RssEntry, EntryTag
 
@@ -63,10 +63,10 @@ def check_entry_content(entry):
         entry.matched_words = ' '.join(matched_words)
         entry.passed_filter = True
         entry.save()
-        send_message(f'{entry.title}\n'
-                     f'{entry.matched_words}\n\n'
-                     f'{entry.summary}\n\n'
-                     f'<a href="{entry.link}">Читать</a>')
+        send_bot_message(f'{entry.title}\n'
+                         f'{entry.matched_words}\n\n'
+                         f'{entry.summary}\n\n'
+                         f'<a href="{entry.link}">Читать</a>')
 
 
 def clear_html(text):
