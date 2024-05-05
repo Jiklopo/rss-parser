@@ -139,12 +139,17 @@ LOGGING = {
     'disable_existing_loggers': False,
 
     'root': {
-        'handlers': ['error_file', 'info_file', 'console'],
+        'handlers': ['telegram', 'error_file', 'info_file', 'console'],
         'level': LOG_LEVEL,
         'propagate': True
     },
 
     'handlers': {
+        'telegram': {
+            'class': 'apps.common.loggers.TelegramHandler',
+            'level': 'ERROR',
+            'formatter': 'verbose',
+        },
         'error_file': {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'error.log',
@@ -176,12 +181,14 @@ LOGGING = {
             'style': '{',
         },
     },
+
     'filters': {
         'exclude_disallowed_host': {
             '()': 'django.utils.log.CallbackFilter',
             'callback': lambda record: not record.getMessage().startswith("Invalid HTTP_HOST header:"),
         },
     },
+
     'loggers': {
         'django.security.DisallowedHost': {
             'handlers': ['console'],
@@ -189,7 +196,12 @@ LOGGING = {
             'propagate': False,
             'filters': ['exclude_disallowed_host'],
         },
-    },
+        'apps.common.loggers': {
+            'handlers': ['error_file', 'info_file', 'console'],
+            'level': LOG_LEVEL,
+            'propagate': False
+        },
+    }
 }
 
 # Internationalization
