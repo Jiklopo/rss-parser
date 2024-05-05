@@ -49,23 +49,10 @@ class RssEntry(UUIDModel, DateTimeModel):
     passed_filter = models.BooleanField(_('Прошла фильтрацию'), default=False)
     matched_words = models.TextField(_('Текст, прошедший фильтр'), blank=True, null=True)
 
-    tags = models.ManyToManyField(
-        to='EntryTag',
-        related_name='entries',
-        through='EntryTags',
-        through_fields=('entry', 'tag'),
-        verbose_name=_('Тэги')
-    )
-
-    @property
-    @admin.display(description=_('Тэги'))
-    def tags_text(self):
-        return ', '.join(t.text.title() for t in self.tags.all())
-
     @property
     @admin.display(description=_('Текст для фильтрации'))
     def filter_text(self):
-        fields = (self.link, self.title, self.summary, self.tags_text)
+        fields = (self.link, self.title, self.summary)
         return f'\n'.join(fields)
 
     def __str__(self):
@@ -75,29 +62,3 @@ class RssEntry(UUIDModel, DateTimeModel):
         ordering = ('-published',)
         verbose_name = _('Запись')
         verbose_name_plural = _('Записи')
-
-
-class EntryTag(UUIDModel):
-    text = models.TextField(_('Текст'), unique=True)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        verbose_name = _('Тэг')
-        verbose_name_plural = _('Тэги')
-
-
-class EntryTags(UUIDModel):
-    entry = models.ForeignKey(
-        to=RssEntry,
-        on_delete=models.CASCADE,
-        related_name='tags_data',
-        verbose_name=_('Запись')
-    )
-    tag = models.ForeignKey(
-        to=EntryTag,
-        on_delete=models.CASCADE,
-        related_name='entries_data',
-        verbose_name=_('Тэг')
-    )

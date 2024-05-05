@@ -7,16 +7,17 @@ from django.utils import timezone
 
 from apps.news.choices import ParsingFrequency
 from apps.news.models import RssFeed
-from apps.news.services import parse_rss_feed
+from apps.news.services import RssFeedParser
 
 
 class Command(BaseCommand):
     help = 'Run all required parsers based on last_parsed timestamp'
 
     def handle(self, *args, **options):
+        rss_parser = RssFeedParser()
         feeds = self.get_feeds_for_parsing()
         for feed in feeds:
-            parse_rss_feed(feed)
+            rss_parser.parse_rss_feed(feed)
 
     @staticmethod
     def get_feeds_for_parsing():

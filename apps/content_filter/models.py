@@ -5,7 +5,7 @@ from apps.common.abstact_models import UUIDModel, DateTimeModel
 
 
 class Keyword(UUIDModel, DateTimeModel):
-    text = models.CharField(_('Текст'), max_length=256, unique=True)
+    text = models.CharField(_('Текст'), max_length=256)
 
     def save(self, *args, **kwargs):
         self.text = self.text.lower().strip()

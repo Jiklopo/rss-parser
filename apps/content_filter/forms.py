@@ -3,7 +3,6 @@ from django import forms
 from apps.content_filter.models import Keyword
 from django.utils.translation import gettext_lazy as _
 
-from apps.content_filter.services import get_keywords
 
 
 class KeywordCreateForm(forms.ModelForm):
@@ -18,7 +17,7 @@ class KeywordCreateForm(forms.ModelForm):
     )
 
     def save(self, commit=True):
-        saved_keywords = get_keywords(use_cache=False)
+        saved_keywords = set(Keyword.objects.values_list('text', flat=True))
         delimiter = self.cleaned_data['delimiter']
         keywords = set(kword.lower().strip() for kword in self.cleaned_data['keywords'].split(delimiter))
         keyword_objects = (Keyword(text=kword) for kword in keywords if kword and kword not in saved_keywords)
