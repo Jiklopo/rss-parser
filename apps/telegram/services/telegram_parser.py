@@ -5,8 +5,8 @@ from django.utils import timezone
 
 from apps.content_filter.services import ContentFilterService
 from apps.telegram.models import TelegramChannel
-from apps.telegram.services.telethon import create_telethon_client
 from apps.telegram.services.bot import send_bot_message
+from apps.telegram.services.telethon import create_telethon_client
 
 logger = getLogger(__name__)
 
@@ -14,7 +14,6 @@ logger = getLogger(__name__)
 class TelegramParser:
     def __init__(self):
         self._content_filter = ContentFilterService()
-        self._telethon_client = None
 
     def parse_telegram_channel(self, channel: TelegramChannel):
         logger.info(f'Parsing Telegram channel {channel.name}')
@@ -51,11 +50,8 @@ class TelegramParser:
 
     @async_to_sync()
     async def _get_latest_messages(self, channel: TelegramChannel):
-        if not self._telethon_client:
-            self._telethon_client = create_telethon_client()
-
-        async with self._telethon_client:
-            telegram_channel = await self._telethon_client.get_entity(channel.channel_url)
+        async with create_telethon_client() as client:
+            telegram_channel = await client.get_entity(channel.channel_url)
             if not channel.last_message_id:
-                return await self._telethon_client.get_messages(telegram_channel, limit=3)
-            return await self._telethon_client.get_messages(telegram_channel, min_id=int(channel.last_message_id))
+                return await client.get_messages(telegram_channel, limit=3)
+            return await client.get_messages(telegram_channel, min_id=int(channel.last_message_id))
