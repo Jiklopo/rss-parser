@@ -58,7 +58,7 @@ class RssFeedParser:
         entry.passed_filter = bool(matched_words)
         entry.save()
         send_bot_message(
-            f'RSS: {rss_feed.name}'
+            f'RSS: {rss_feed.name}\n'
             f'{entry.title}\n'
             f'Совпадения: {", ".join(matched_words)}\n\n'
             f'{entry.summary}\n\n'
